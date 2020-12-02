@@ -1,8 +1,7 @@
 package it.flatmap.fantaz
 
 import java.io.IOException
-
-import zio.{ExitCode, IO, URIO, ZIO}
+import zio.{ExitCode, Has, IO, URIO, ZIO}
 import zio.console._
 
 object Fantaz extends zio.App {
@@ -22,5 +21,7 @@ object Fantaz extends zio.App {
     uppercase <- toUppercase(name)
     - <- output(uppercase)
   } yield ()
+
+
   val myApplication = value
 }
