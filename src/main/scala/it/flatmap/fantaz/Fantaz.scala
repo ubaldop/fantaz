@@ -1,27 +1,22 @@
 package it.flatmap.fantaz
 
-import java.io.IOException
-import zio.{ExitCode, Has, IO, URIO, ZIO}
+import zio.config.getConfig
 import zio.console._
+import zio.{Has, ZIO}
 
 object Fantaz extends zio.App {
-  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = myApplication.exitCode
+  
+  val config = Config.appConfig
 
-  def output(name: String) = putStr(s"Hello ${name}")
-
-  def getName = for {
-    _ <-  putStrLn("Hello my friend, give me your name")
-    name <- getStrLn
-  } yield name
-
-  def toUppercase(name: String) = IO.succeed(name.toUpperCase)
-
-  private val value: ZIO[Console, IOException, Unit] = for {
-    name <- getName
-    uppercase <- toUppercase(name)
-    - <- output(uppercase)
-  } yield ()
+  val configurationEnvironment: ZIO[Has[FantazConfig] with Console, Nothing, Unit] =
+    for {
+      _ <- putStrLn("Hello > ")
+      appConfig <- getConfig[FantazConfig]
+      _         <- putStrLn(appConfig.endpoint)
+      _         <- putStrLn(appConfig.port.toString)
+    } yield ()
 
 
-  val myApplication = value
+  override def run(args: List[String]) =
+    configurationEnvironment.provideLayer(Console.live ++ config).exitCode
 }
