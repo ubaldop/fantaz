@@ -1,6 +1,5 @@
 package it.flatmap.fantaz
 
-import org.http4s.FormDataDecoder.formEntityDecoder
 import org.http4s.client.Client
 import org.http4s.client.dsl.Http4sClientDsl
 import zio.{Has, RIO, Task, URIO, URLayer, ZIO, ZLayer}
@@ -24,5 +23,5 @@ object APIClient {
 
 
 private final case class Http4sClient(client: Client[Task]) extends APIClient.Service with Http4sClientDsl[Task] {
-  override def invoke(uri: String, parameters: Map[String, String]): Task[String] = client.expect[String]("TODO-URL")
+  override def invoke(uri: String, parameters: Map[String, String]): Task[String] = client.expect[String]("https://www.reddit.com/.json")
 }
